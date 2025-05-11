@@ -89,7 +89,7 @@ M.setup = function(opts)
     callback = function()
       local buf_name = vim.api.nvim_buf_get_name(0)
       if stack:size() < 50 then
-        if buf_name ~= '' then
+        if buf_name ~= '' and not string.find(buf_name, "NvimTree") then
           stack:remove(buf_name)
           stack:push(buf_name)
         end
