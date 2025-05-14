@@ -24,6 +24,7 @@ M.Stack = function ()
       return table.remove(self._stack)
     end,
 
+
     peak = function(self)
       return rawget(self._stack, self.count)
     end,

@@ -29,5 +29,15 @@ function M.back()
   vim.cmd.edit(stack:peak())
 end
 
+function M.forward()
+  local top = stack:pop()
+  local second = stack:pop()
+  stack:push(top)
+  stack:push(second)
+
+  vim.cmd.edit(stack:peak())
+end
+
+
 return M
 
