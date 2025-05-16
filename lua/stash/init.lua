@@ -133,11 +133,17 @@ function stash.setup(user_config)
 end
 
 function stash.close()
-  local prev = stash:pop()
-  if prev.previous then
-    vim.cmd.edit(prev.previous)
+  local top = stash:pop()
+  if top.previous then
+    local prev = stash:find(function (item)
+      return item.name == top.previous
+    end)
+
+    stash:set_current(prev)
+    prev.next = nil
+    vim.cmd.edit(prev.name)
   else
-    print('back: current is nil')
+    print('No more items in stash')
   end
 end
 
@@ -147,19 +153,24 @@ function stash.back()
     local prev = stash:find(function (item)
       return item.name == curr.previous
     end)
+    stash:set_current(prev)
     prev.next = curr.name
     vim.cmd.edit(prev.name)
   else
-    print('back: current is nil')
+    print('No more items in stash')
   end
 end
 
 function stash.forward()
   local curr = stash:get_current()
   if curr and curr.next then
-    vim.cmd.edit(curr.next)
+    local next = stash:find(function (item)
+      return item.name == curr.next
+    end)
+    stash:set_current(next)
+    vim.cmd.edit(next.name)
   else
-    print('forward: current is nil')
+    print('You have reached the end of the stack')
   end
 end
 
