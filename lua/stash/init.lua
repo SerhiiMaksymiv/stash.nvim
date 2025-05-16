@@ -26,18 +26,13 @@ end
 
 function M.back()
   stack:pop()
-  vim.cmd.edit(stack:peak())
+  local top = stack:peak()
+  if top then
+    vim.cmd.edit(top)
+  else
+    vim.cmd.edit(vim.api.nvim_buf_get_name(0))
+  end
 end
-
-function M.forward()
-  local top = stack:pop()
-  local second = stack:pop()
-  stack:push(top)
-  stack:push(second)
-
-  vim.cmd.edit(stack:peak())
-end
-
 
 return M
 
