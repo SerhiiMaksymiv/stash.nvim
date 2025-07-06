@@ -61,7 +61,18 @@ function M.back()
 end
 
 function M.forward()
-  print('forward')
+  stack:move_stash_lock()
+  local current = stack:get_current()
+  local index = stack:indexOf(current)
+  local next = stack:get_by_index(index + 1)
+  if next then
+    current.current = false
+    stack:set_current(next)
+    vim.cmd.edit(next.name)
+  else
+    vim.cmd.edit(stack:peak())
+  end
+  stack:move_stash_unlock()
 end
 
 function M.print()
