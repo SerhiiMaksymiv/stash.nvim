@@ -82,7 +82,7 @@ function M.forward()
     stack:set_current(next)
     vim.cmd.edit(next.name)
   else
-    vim.cmd.edit(stack:peak())
+    vim.cmd.edit(vim.api.nvim_buf_get_name(0))
   end
   stack:move_stash_unlock()
 end
