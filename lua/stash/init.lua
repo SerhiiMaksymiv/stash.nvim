@@ -49,7 +49,7 @@ function M.back()
   stack:move_stash_lock()
   local current = stack:get_current()
   local index = stack:indexOf(current)
-  if index == nil then
+  if index then
     stack:move_stash_unlock()
     print('No back buffers')
     return
@@ -70,7 +70,7 @@ function M.forward()
   stack:move_stash_lock()
   local current = stack:get_current()
   local index = stack:indexOf(current)
-  if index == nil then
+  if index then
     stack:move_stash_unlock()
     print('No forward buffers')
     return
