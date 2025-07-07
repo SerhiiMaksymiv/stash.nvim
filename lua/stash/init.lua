@@ -47,44 +47,18 @@ end
 
 function M.back()
   stack:move_stash_lock()
-  local current = stack:get_current()
-  local index = stack:indexOf(current)
-  if index == nil then
-    stack:move_stash_unlock()
-    print('No back buffers')
-    return
-  end
-
-  local prev = stack:get_by_index(index - 1)
-  if prev then
-    current.current = false
-    stack:set_current(prev)
-    vim.cmd.edit(prev.name)
-  else
-    vim.cmd.edit(vim.api.nvim_buf_get_name(0))
-  end
+  stack:move_down_stash()
   stack:move_stash_unlock()
 end
 
 function M.forward()
   stack:move_stash_lock()
-  local current = stack:get_current()
-  local index = stack:indexOf(current)
-  if index == nil then
-    stack:move_stash_unlock()
-    print('No forward buffers')
-    return
-  end
-
-  local next = stack:get_by_index(index + 1)
-  if next then
-    current.current = false
-    stack:set_current(next)
-    vim.cmd.edit(next.name)
-  else
-    vim.cmd.edit(vim.api.nvim_buf_get_name(0))
-  end
+  stack:move_up_stash()
   stack:move_stash_unlock()
+end
+
+function M.reset()
+  stack:print()
 end
 
 function M.print()

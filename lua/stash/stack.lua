@@ -7,6 +7,13 @@ M.Stack = function ()
     nonce = 0,
     is_stash = false,
 
+    reset = function(self)
+      self.count = 0
+      self.nonce = 0
+      self.is_stash = false
+      self._stack = {}
+    end,
+
     size = function(self)
       return self.count
     end,
@@ -79,10 +86,41 @@ M.Stack = function ()
     end,
 
     move_down_stash = function(self)
-      return rawget(self._stack, self.count)
+      local current = self:get_current()
+      local index = self:indexOf(current)
+      if index == nil then
+        self:move_stash_unlock()
+        print('No back buffers')
+        return
+      end
+
+      local prev = self:get_by_index(index - 1)
+      if prev then
+        current.current = false
+        self:set_current(prev)
+        vim.cmd.edit(prev.name)
+      else
+        vim.cmd.edit(vim.api.nvim_buf_get_name(0))
+      end
     end,
 
     move_up_stash = function(self)
+      local current = self:get_current()
+      local index = self:indexOf(current)
+      if index == nil then
+        self:move_stash_unlock()
+        print('No forward buffers')
+        return
+      end
+
+      local next = self:get_by_index(index + 1)
+      if next then
+        current.current = false
+        self:set_current(next)
+        vim.cmd.edit(next.name)
+      else
+        vim.cmd.edit(vim.api.nvim_buf_get_name(0))
+      end
     end,
 
     shift = function(self)
