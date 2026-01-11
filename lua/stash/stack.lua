@@ -174,6 +174,28 @@ M.Stack = function ()
 
       return r
     end,
+
+    add_to_stash = function(self, buf_name)
+      if self:size() < 20 then
+        if buf_name ~= '' and not string.find(buf_name, "NvimTree") then
+
+          local item = self:get_current()
+          if item then
+            item.current = false -- update current buffer
+          end
+
+          local top = {
+            name = buf_name,
+            current = true
+          }
+
+          self:remove(buf_name)
+          self:push(top)
+        end
+      else
+        print('Stack size reached its limit: ' .. self:size())
+      end
+    end
   }, {
     __index = function(self, index)
       return rawget(self._stack, index)
